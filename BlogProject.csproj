@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Views\Tags\**" />
+    <Compile Remove="wwwroot\lib\**" />
     <Content Remove="Views\Tags\**" />
+    <Content Remove="wwwroot\lib\**" />
     <EmbeddedResource Remove="Views\Tags\**" />
+    <EmbeddedResource Remove="wwwroot\lib\**" />
     <None Remove="Views\Tags\**" />
+    <None Remove="wwwroot\lib\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +23,8 @@
 
   <ItemGroup>
     <Content Remove="Views\Comments\Details.cshtml" />
+    <Content Remove="wwwroot\css\site.css" />
+    <Content Remove="wwwroot\js\site.js" />
   </ItemGroup>
 
   <ItemGroup>
