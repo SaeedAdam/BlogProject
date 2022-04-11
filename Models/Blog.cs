@@ -33,12 +33,14 @@ namespace BlogProject.Models
         [DisplayName("Blog Image")]
         public byte[] ImageData { get; set; }
 
+        [DisplayName("Image Type")]
         public string ContentType { get; set; }
 
         [NotMapped]
         public IFormFile Image { get; set; }
 
         //NAVIGATION PROPERTIES
+        [DisplayName("Author")]
         public virtual BlogUser BlogUser { get; set; }
         public virtual ICollection<Post> Posts { get; set; } = new HashSet<Post>();
     }

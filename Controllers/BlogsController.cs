@@ -12,20 +12,27 @@ namespace BlogProject.Controllers
 {
     public class BlogsController : Controller
     {
+        #region VARIABLES
         private readonly ApplicationDbContext _context;
+        #endregion
 
+        #region CONSTRUCTOR
         public BlogsController(ApplicationDbContext context)
         {
             _context = context;
-        }
+        } 
+        #endregion
 
+        #region INDEX
         // GET: Blogs
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Blogs.Include(b => b.BlogUser);
             return View(await applicationDbContext.ToListAsync());
-        }
+        } 
+        #endregion
 
+        #region DETAILS
         // GET: Blogs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -43,24 +50,31 @@ namespace BlogProject.Controllers
             }
 
             return View(blog);
-        }
+        } 
+        #endregion
 
+        #region CREATE
+        #region GET
         // GET: Blogs/Create
         public IActionResult Create()
         {
             ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
+        #endregion
 
+        #region POST
         // POST: Blogs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BlogUserId,Name,Description,Created,Updated,ImageData,ContentType")] Blog blog)
+        public async Task<IActionResult> Create([Bind("Name,Description,Image")] Blog blog)
         {
             if (ModelState.IsValid)
             {
+                blog.Created = DateTime.Now;
+
                 _context.Add(blog);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -68,7 +82,11 @@ namespace BlogProject.Controllers
             ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id", blog.BlogUserId);
             return View(blog);
         }
+        #endregion
+        #endregion
 
+        #region EDIT
+        #region GET
         // GET: Blogs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -82,16 +100,17 @@ namespace BlogProject.Controllers
             {
                 return NotFound();
             }
-            ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id", blog.BlogUserId);
             return View(blog);
         }
+        #endregion
 
+        #region POST    
         // POST: Blogs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BlogUserId,Name,Description,Created,Updated,ImageData,ContentType")] Blog blog)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Image")] Blog blog)
         {
             if (id != blog.Id)
             {
@@ -121,7 +140,11 @@ namespace BlogProject.Controllers
             ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id", blog.BlogUserId);
             return View(blog);
         }
+        #endregion
+        #endregion
 
+        #region DELETE
+        #region GET
         // GET: Blogs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -140,7 +163,9 @@ namespace BlogProject.Controllers
 
             return View(blog);
         }
+        #endregion
 
+        #region POST
         // POST: Blogs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -151,10 +176,14 @@ namespace BlogProject.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        #endregion
+        #endregion
 
+        #region DOES BLOG EXIST
         private bool BlogExists(int id)
         {
             return _context.Blogs.Any(e => e.Id == id);
-        }
+        } 
+        #endregion
     }
 }
