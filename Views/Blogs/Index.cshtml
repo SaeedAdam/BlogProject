@@ -1,4 +1,8 @@
-﻿@model IEnumerable<BlogProject.Models.Blog>
+﻿@using BlogProject.Services
+
+@model IEnumerable<BlogProject.Models.Blog>
+
+@inject IImageService imageService
 
 @{
     ViewData["Title"] = "Index";
@@ -27,45 +31,36 @@
             <th>
                 @Html.DisplayNameFor(model => model.ImageData)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ContentType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BlogUser)
-            </th>
+            
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var blog in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => blog.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => blog.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => blog.Created)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => blog.Updated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => blog.ImageData)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => blog.ContentType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => blog.BlogUser.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@blog.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@blog.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@blog.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var blog in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => blog.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => blog.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => blog.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => blog.Updated)
+                </td>
+                <td>
+                    <img src=" @imageService.DecodeImage(blog.ImageData,blog.ContentType)" style="width:60px;height:60px;" />
+                   
+               
+                <td>
+                    <a asp-action="Edit" asp-route-id="@blog.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@blog.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@blog.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

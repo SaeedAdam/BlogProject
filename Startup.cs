@@ -51,6 +51,9 @@ namespace BlogProject
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddScoped<IBlogEmailSender, EmailService>();
 
+            //IMAGE SERVICE
+            services.AddScoped<IImageService, BasicImageService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
