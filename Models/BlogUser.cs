@@ -21,6 +21,12 @@ namespace BlogProject.Models
         [DisplayName("Last Name")]
         public string LastName { get; set; }
 
+        [Required]
+        [StringLength(50, ErrorMessage = "The{0} must be at least {2} and no more than {1} characters long.", MinimumLength = 2)]
+        [DisplayName("Last Name")]
+        public string DisplayName { get; set; }
+
+
         [NotMapped]
         public string FullName { get { return $"{FirstName} {LastName}"; } }
 
