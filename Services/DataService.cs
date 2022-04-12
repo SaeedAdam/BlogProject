@@ -16,7 +16,6 @@ namespace BlogProject.Services
         private readonly ApplicationDbContext _dbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<BlogUser> _userManager;
-
         #endregion
 
         #region CONSTRUCTOR
@@ -29,6 +28,7 @@ namespace BlogProject.Services
         #endregion
 
 
+        #region MANAGE DATA
         public async Task ManageDataAsync()
         {
             //CREATE DATABASE FROM MIGRATIONS
@@ -38,7 +38,8 @@ namespace BlogProject.Services
 
             //SEED USERS INTO SYSTEM
             await SeedUsersAsync();
-        }
+        } 
+        #endregion
 
         #region SEED ROLES
         private async Task SeedRolesAsync()
@@ -98,8 +99,5 @@ namespace BlogProject.Services
 
         } 
         #endregion
-
-
-
     }
 }
