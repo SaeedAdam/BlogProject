@@ -54,6 +54,9 @@ namespace BlogProject
             //IMAGE SERVICE
             services.AddScoped<IImageService, BasicImageService>();
 
+            //SLUG SERVICE
+            services.AddScoped<ISlugService, BasicSlugService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

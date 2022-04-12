@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BlogProject.Data;
 using BlogProject.Models;
+using BlogProject.Services;
 
 namespace BlogProject.Controllers
 {
@@ -14,13 +15,15 @@ namespace BlogProject.Controllers
     {
         #region PRIVATE VARIABLES
         private readonly ApplicationDbContext _context;
+        private readonly ISlugService _slugService;
         #endregion
 
         #region CONSTRUCTOR
-        public PostsController(ApplicationDbContext context)
+        public PostsController(ApplicationDbContext context, ISlugService slugService)
         {
             _context = context;
-        } 
+            _slugService = slugService;
+        }
         #endregion
 
         #region INDEX
@@ -71,11 +74,23 @@ namespace BlogProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BlogId,Title,Abstract,Content,ReadyStatus,Image")] Post post)
+        public async Task<IActionResult> Create([Bind("BlogId,Title,Abstract,Content,ReadyStatus,Image")] Post post, List<string> tagValues)
         {
             if (ModelState.IsValid)
             {
                 post.Created = DateTime.Now;
+
+                string slug = _slugService.UrlFriendly(post.Title);
+                if (!_slugService.IsUnique(slug))
+                {
+                    ModelState.AddModelError("Title", "The title you provided cannot be used as it produced a duplicate slug");
+
+                    ViewData["TagValues"] = string.Join(",", tagValues);
+
+                    return View(post);
+                }
+
+                post.Slug = slug;
 
 
                 _context.Add(post);
