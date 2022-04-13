@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using BlogProject.Data;
 using BlogProject.Models;
 using BlogProject.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace BlogProject.Controllers
 {
@@ -16,13 +18,15 @@ namespace BlogProject.Controllers
         #region PRIVATE VARIABLES
         private readonly ApplicationDbContext _context;
         private readonly ISlugService _slugService;
+        private readonly IImageService _imageService;
         #endregion
 
         #region CONSTRUCTOR
-        public PostsController(ApplicationDbContext context, ISlugService slugService)
+        public PostsController(ApplicationDbContext context, ISlugService slugService, IImageService imageService)
         {
             _context = context;
             _slugService = slugService;
+            _imageService = imageService;
         }
         #endregion
 
@@ -80,6 +84,9 @@ namespace BlogProject.Controllers
             {
                 post.Created = DateTime.Now;
 
+                post.ImageData = await _imageService.EncodeImageAsync(post.Image);
+                post.ContentType = _imageService.ContentType(post.Image);
+
                 string slug = _slugService.UrlFriendly(post.Title);
                 if (!_slugService.IsUnique(slug))
                 {
@@ -107,6 +114,7 @@ namespace BlogProject.Controllers
         #endregion
 
         #region EDIT
+        #region GET
         // GET: Posts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -121,16 +129,18 @@ namespace BlogProject.Controllers
                 return NotFound();
             }
             ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Name", post.BlogId);
-            
+
             return View(post);
         }
+        #endregion
 
+        #region POST
         // POST: Posts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BlogId,Title,Abstract,Content,ReadyStatus,Image")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BlogId,Title,Abstract,Content,ReadyStatus")] Post post, IFormFile newImage)
         {
             if (id != post.Id)
             {
@@ -141,9 +151,20 @@ namespace BlogProject.Controllers
             {
                 try
                 {
-                    post.Updated = DateTime.Now;
+                    Post newPost = await _context.Posts.FindAsync(post.Id);
 
-                    _context.Update(post);
+                    newPost.Updated = DateTime.Now;
+                    newPost.Title = post.Title;
+                    newPost.Abstract = post.Abstract;
+                    newPost.Content = post.Content;
+                    newPost.ReadyStatus = post.ReadyStatus;
+
+                    if (newImage is not null)
+                    {
+                        newPost.ImageData = await _imageService.EncodeImageAsync(newImage);
+                        newPost.ContentType = _imageService.ContentType(newImage);
+                    }
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -162,7 +183,8 @@ namespace BlogProject.Controllers
             ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Description", post.BlogId);
             ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id", post.BlogUserId);
             return View(post);
-        }
+        } 
+        #endregion
         #endregion
 
         #region DELETE
