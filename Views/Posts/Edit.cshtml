@@ -10,7 +10,7 @@
 <h4>Post</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
@@ -37,9 +37,33 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="ReadyStatus" class="control-label"></label>
-                <select asp-for="ReadyStatus" class="form-control" asp-items="Html.GetEnumSelectList<ReadyStatus>()"></select>
-                <span asp-validation-for="ReadyStatus" class="text-danger"></span>
+                <div class="row">
+                    <div class="col">
+                        <label class="control-label">Manage Tags</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="row mb-2">
+                            <div class="col">
+                                <input type="text" class="form-control" id="TagEntry" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <button onclick="AddTag()" name="Add" type="button" class="btn btn-dark note-btn-block btn-rounded">Add</button>
+                            </div>
+                            <div class="col">
+                                <button onclick="DeleteTag()" name="Delete" type="button" class="btn btn-dark note-btn-block ">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <select class="note-btn-block" name="TagValues" id="TagList" multiple></select>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -49,6 +73,14 @@
             </div>
 
             <div class="form-group">
+                <label asp-for="ReadyStatus" class="control-label"></label>
+                <select asp-for="ReadyStatus" class="form-control" asp-items="Html.GetEnumSelectList<ReadyStatus>()"></select>
+                <span asp-validation-for="ReadyStatus" class="text-danger"></span>
+            </div>
+
+
+
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -56,16 +88,21 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="btn" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
 
     <script>
+
+        let tagValues = "@ViewData["TagValues"]";
+
         //Default font size but not for placeholder...
         $('#Content').summernote({
             placeholder: "Content"
         });
     </script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/js/custom.js"></script>
+
 }

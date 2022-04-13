@@ -1,0 +1,12 @@
+﻿.btn {
+    border-radius:10px;
+}
+
+option{
+    font-weight:bold;
+}
+
+div.swal2-container.swal2-center.swal2-backdrop-show > div{
+    outline: 4px solid red;
+    
+}
