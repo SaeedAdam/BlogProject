@@ -64,7 +64,7 @@ namespace BlogProject.Controllers
         #region CREATE
         #region GET
         // GET: Blogs/Create
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             return View();
