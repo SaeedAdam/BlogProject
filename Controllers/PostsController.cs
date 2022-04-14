@@ -11,6 +11,8 @@ using BlogProject.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using BlogProject.Enums;
+using X.PagedList;
 
 namespace BlogProject.Controllers
 {
@@ -21,17 +23,31 @@ namespace BlogProject.Controllers
         private readonly ISlugService _slugService;
         private readonly IImageService _imageService;
         private readonly UserManager<BlogUser> _userManager;
+        private readonly BlogSearchService _blogSearchService;
         #endregion
 
         #region CONSTRUCTOR
-        public PostsController(ApplicationDbContext context, ISlugService slugService, IImageService imageService, UserManager<BlogUser> userManager)
+        public PostsController(ApplicationDbContext context, ISlugService slugService, IImageService imageService, UserManager<BlogUser> userManager, BlogSearchService blogSearchService)
         {
             _context = context;
             _slugService = slugService;
             _imageService = imageService;
             _userManager = userManager;
+            _blogSearchService = blogSearchService;
         }
         #endregion
+
+        public async Task<IActionResult> SearchIndex(int? page, string searchTerm)
+        {
+            ViewData["SearchTerm"] = searchTerm;
+
+            var pageNumber = page ?? 1;
+            var pageSize = 5;
+
+            var posts = _blogSearchService.Search(searchTerm);
+
+            return View(await posts.ToPagedListAsync(pageNumber, pageSize));
+        }
 
         #region INDEX
         // GET: Posts
@@ -39,6 +55,28 @@ namespace BlogProject.Controllers
         {
             var applicationDbContext = _context.Posts.Include(p => p.Blog).Include(p => p.BlogUser);
             return View(await applicationDbContext.ToListAsync());
+        }
+        #endregion
+
+        #region BLOG POST INDEX
+        public async Task<IActionResult> BlogPostIndex(int? id, int? page)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var pageNumber = page ?? 1;
+            var pageSize = 5;
+
+            //var posts = _context.Posts.Where(p => p.BlogId == id).ToList();
+
+            var posts = await _context.Posts.Where(p => p.BlogId == id && p.ReadyStatus == ReadyStatus.ProductionReady)
+                                      .OrderByDescending(p => p.Created)
+                                      .ToPagedListAsync(pageNumber, pageSize);
+
+
+            return View(posts);
         }
         #endregion
 
@@ -105,15 +143,21 @@ namespace BlogProject.Controllers
                     ModelState.AddModelError("", "The title you provided cannot be used as it resulted in an empty slug.");
                 }
 
-               
-
-
                 //DETECT INCOMING DUPLICATE SLUGS
-                if (!_slugService.IsUnique(slug))
+                else if (!_slugService.IsUnique(slug))
                 {
                     validationError = true;
                     ModelState.AddModelError("Title", "The title you provided cannot be used as it produced a duplicate slug.");
                 }
+
+                //else if (slug.Contains("test"))
+                //{
+                //    validationError = true;
+
+                //    ModelState.AddModelError("", "Are you testing again?");
+
+                //    ModelState.AddModelError("Title", "The title you provided cannot contain the word test");
+                //}
 
                 if (validationError)
                 {

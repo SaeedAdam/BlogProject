@@ -47,6 +47,8 @@ namespace BlogProject
             //CUSTOM DATA CLASS
             services.AddScoped<DataService>();
 
+            services.AddScoped<BlogSearchService>();
+
             //EMAIL SERVICE
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddScoped<IBlogEmailSender, EmailService>();
@@ -83,9 +85,15 @@ namespace BlogProject
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(name: "SlugRoute",
+                                             pattern: "BlogPosts/UrlFriendly/{slug}",
+                                             defaults: new { controller = "Posts", action = "Details" });
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
                 endpoints.MapRazorPages();
             });
         }
