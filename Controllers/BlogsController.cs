@@ -11,6 +11,8 @@ using BlogProject.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace BlogProject.Controllers
 {
@@ -20,14 +22,16 @@ namespace BlogProject.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IImageService _imageService;
         private readonly UserManager<BlogUser> _userManager;
+        private readonly IConfiguration _configuration;
         #endregion
 
         #region CONSTRUCTOR
-        public BlogsController(ApplicationDbContext context, IImageService imageService, UserManager<BlogUser> userManager)
+        public BlogsController(ApplicationDbContext context, IImageService imageService, UserManager<BlogUser> userManager, IConfiguration configuration)
         {
             _context = context;
             _imageService = imageService;
             _userManager = userManager;
+            _configuration = configuration;
         }
         #endregion
 
@@ -83,8 +87,12 @@ namespace BlogProject.Controllers
             {
                 blog.Created = DateTime.Now;
                 blog.BlogUserId = _userManager.GetUserId(User);
-                blog.ImageData = await _imageService.EncodeImageAsync(blog.Image);
-                blog.ContentType = _imageService.ContentType(blog.Image);
+
+                blog.ImageData = (await _imageService.EncodeImageAsync(blog.Image)?? 
+                                  await _imageService.EcondeImageAsync(_configuration["DefaultBlogImage"]));
+
+                blog.ContentType = blog.Image is null ? Path.GetExtension(_configuration["DefaultBlogImage"]) :
+                                                            _imageService.ContentType(blog.Image);
 
                 _context.Add(blog);
                 await _context.SaveChangesAsync();

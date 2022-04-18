@@ -31,8 +31,8 @@ namespace BlogProject.Controllers
         #region INDEX
         public async Task<IActionResult> Index(int? page)
         {
-            var pageNumber = page ?? 1;
-            var pageSize = 5;
+            int pageNumber = page ?? 1;
+            int pageSize = 5;
 
             var blogs = _context.Blogs
                                 .Include(b => b.BlogUser)
