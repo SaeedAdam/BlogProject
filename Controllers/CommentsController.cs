@@ -96,10 +96,17 @@ namespace BlogProject.Controllers
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
 
-                //return RedirectToAction(nameof(Index));
+                comment = await _context.Comments
+                    .Include(c => c.Post)
+                    .Where(c => c.Id == comment.Id)
+                    .FirstOrDefaultAsync();
 
-                //NEED TO GET V THIS TO WORK 
-                return RedirectToAction("Details", "Posts", new { slug = comment.Post.Slug }, "commentSection");
+                if (comment == null)
+                {
+                    return NotFound();
+                }
+
+                return RedirectToAction("Details", "Posts", new { Slug = comment.Post.Slug }, "commentSection");
             }
 
             return View(comment);
@@ -205,8 +212,17 @@ namespace BlogProject.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id, string slug)
         {
             var comment = await _context.Comments.FindAsync(id);
-            _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Comments.Remove(comment);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
             return RedirectToAction("Details", "Posts", new { slug }, "commentSection");
 
         }

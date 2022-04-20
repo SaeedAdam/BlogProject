@@ -89,7 +89,7 @@ namespace BlogProject.Controllers
                 blog.BlogUserId = _userManager.GetUserId(User);
 
                 blog.ImageData = (await _imageService.EncodeImageAsync(blog.Image)?? 
-                                  await _imageService.EcondeImageAsync(_configuration["DefaultBlogImage"]));
+                                  await _imageService.EncondeImageAsync(_configuration["DefaultBlogImage"]));
 
                 blog.ContentType = blog.Image is null ? Path.GetExtension(_configuration["DefaultBlogImage"]) :
                                                             _imageService.ContentType(blog.Image);

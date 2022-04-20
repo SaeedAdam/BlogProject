@@ -111,7 +111,7 @@ namespace BlogProject.Areas.Identity.Pages.Account
                     Email = Input.Email,
 
                     ImageData = (await _imageService.EncodeImageAsync(Input.ImageFile)) ??
-                                 await _imageService.EcondeImageAsync(_configuration["DefaultUserImage"]),
+                                 await _imageService.EncondeImageAsync(_configuration["DefaultUserImage"]),
 
                     ContentType = Input.ImageFile is null ? Path.GetExtension(_configuration["DefaultUserImage"]) : 
                                                             _imageService.ContentType(Input.ImageFile)

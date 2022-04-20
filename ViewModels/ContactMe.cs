@@ -15,9 +15,6 @@ namespace BlogProject.ViewModels
         [EmailAddress]
         public string Email { get; set; }
 
-        [Phone]
-        public string Phone { get; set; }
-
         [Required]
         [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at most {1} characters long.", MinimumLength = 2)]
         public string Subject { get; set; }

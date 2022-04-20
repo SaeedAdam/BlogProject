@@ -157,7 +157,7 @@
                 @****************************************************************
                     SECTION 4: CAN WE RENDER THE MODERATE AND DELETE BUTTONS
                     *****************************************************************@
-                @if (User.IsInRole(BlogRole.Moderator.ToString()) && comment.Deleted is null)
+                @if ((User.IsInRole(nameof(BlogRole.Administrator)) || User.IsInRole(nameof(BlogRole.Moderator))) && comment.Deleted is null)
                 {
                     <hr>
                     <div class="row">
@@ -166,7 +166,7 @@
                         </div>
                         <div class="col-2">
                             <form asp-action="Delete" asp-controller="Comments">
-                                @Html.Hidden("CommentId", comment.Id)
+                                @Html.Hidden("Id", comment.Id)
                                 @Html.Hidden("Slug", comment.Post.Slug)
                                 <button class="btn-sm btn-dark font-weight-bold btn-block">DELETE</button>
                             </form>

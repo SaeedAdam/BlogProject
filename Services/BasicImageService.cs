@@ -40,7 +40,7 @@ namespace BlogProject.Services
         #endregion
         
         #region ENCODE IMAGE
-        public async Task<byte[]> EcondeImageAsync(string fileName)
+        public async Task<byte[]> EncondeImageAsync(string fileName)
         {
             string file = $"{Directory.GetCurrentDirectory()}/wwwroot/images/{fileName}";
 

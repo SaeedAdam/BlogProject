@@ -10,7 +10,7 @@ namespace BlogProject.Services
     {
         Task<byte[]> EncodeImageAsync(IFormFile file);
 
-        Task<byte[]> EcondeImageAsync(string fileName);
+        Task<byte[]> EncondeImageAsync(string fileName);
 
         string DecodeImage(byte[] data, string type);
 
