@@ -76,6 +76,9 @@ namespace BlogProject.Controllers
                                       .OrderByDescending(p => p.Created)
                                       .ToPagedListAsync(pageNumber, pageSize);
 
+            Blog currentBlog = await _context.Blogs.FirstOrDefaultAsync(b => b.Id == id);
+
+            ViewData["HeaderImage"] = _imageService.DecodeImage(currentBlog.ImageData, currentBlog.ContentType);
 
             return View(posts);
         }
@@ -86,6 +89,7 @@ namespace BlogProject.Controllers
         public async Task<IActionResult> Details(string slug)
         {
             ViewData["Title"] = "Post Details Page";
+
             if (string.IsNullOrEmpty(slug)) return NotFound();
 
             var post = await _context.Posts
@@ -210,7 +214,7 @@ namespace BlogProject.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details));
             }
 
             ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Description", post.BlogId);

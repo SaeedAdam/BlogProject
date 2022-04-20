@@ -13,19 +13,6 @@
         <div class="col-9 border-right">
             @Html.Raw(Model.Post.Content)
         </div>
-        <div class="col-3 text-center font-weight-bold h6">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">SYSTEM TAGS</h4>
-                    <div class="tagView">
-                        @foreach (var tag in Model.Tags)
-                        {
-                            <a asp-action="TagIndex" asp-route-tag="@tag" class="mb-1 btn btn-sm btn-warning btn-outline-dark">#@tag</a>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
 </article>
@@ -43,7 +30,7 @@
 </article>
 
 
-<div>
+<div class="ms-2 me-2">
     @if (User.Identity.IsAuthenticated)
     {
         <form asp-action="Create" asp-controller="Comments" method="post">

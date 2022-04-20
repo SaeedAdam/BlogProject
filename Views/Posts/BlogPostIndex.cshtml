@@ -13,7 +13,7 @@
 
 @model IPagedList<Post>
 
-<div class="row">
+<div class="row ms-2">
     @foreach (var post in Model)
     {
         //Is the logged in user the Author of this post??
@@ -24,18 +24,22 @@
             isAuthor = isAuthor && (post.BlogUserId == userManager.GetUserId(User));
         }
 
-        <div class="col-sm-2 col-lg-4">
-            <div class="card border-dark">
+        <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
+            <div class="card border-dark border-4 m-5 p-3">
+                <img class="card-img-top" src="@imageService.DecodeImage(post.ImageData, post.ContentType)" alt="Blog logo" />
                 <div class="card-body text-center">
                     <div class="blog-primary">
                         <hr class="card-hr" />
-                        <h5 class="card-title">@post.Title</h5>
+                        <h6 class="card-title light-text">@post.Title</h6>
                         <hr class="card-hr" />
                     </div>
                     <div>
-                        <p class="card-text">@post.Abstract</p>
+                        <p class="card-text cftooltip"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="top"
+                           title=""
+                           data-bs-original-title="@post.Abstract">@post.Abstract</p>
                     </div>
-
                     <br />
                     <div class="text-center">
                         <a class="btn btn-dark btn-sm btn-block mb-2" asp-action="Details" asp-controller="Posts" asp-route-slug="@post.Slug">Read More</a>
@@ -48,21 +52,20 @@
                         </div>
                     }
                 </div>
-                <img class="card-img-bottom" src="@imageService.DecodeImage(post.ImageData,  post.ContentType)" />
             </div>
-
         </div>
+
     }
 </div>
 
 <hr />
 
-<div class="row">
+<div class="row ms-2">
     <div class="col h3">
         Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
     </div>
 </div>
-<div class="row">
+<div class="row ms-2">
     <div class="col">
         @Html.PagedListPager(Model, page => Url.Action("BlogPostIndex", new { id = Model.FirstOrDefault().BlogId, page = page }),
             new PagedListRenderOptionsBase
@@ -72,3 +75,8 @@
             })
     </div>
 </div>
+
+
+
+
+

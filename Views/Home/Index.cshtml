@@ -62,13 +62,13 @@
 
 <hr />
 <!-- Paging Controls -->
-<div class="row mt-4">
+<div class="row mt-4 ms-2">
     <div class="col">
         Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
     </div>
 </div>
 
-<div class="row">
+<div class="row ms-2">
     <div class="col">
         @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
             new PagedListRenderOptionsBase

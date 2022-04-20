@@ -48,7 +48,7 @@ namespace BlogProject.Controllers
                                 .OrderByDescending(b => b.Created)
                                 .ToPagedListAsync(pageNumber, pageSize);
 
-            //ViewData["HeaderImage"] = await _imageService.DecodeImage(_configuration["DefaultBlogBackgroundImage"]);
+            ViewData["HeaderImage"] = "/img/defaultBlogBackgroundImage.jpg";
 
             return View(await blogs);
 
@@ -65,6 +65,8 @@ namespace BlogProject.Controllers
         #region CONTACT
         public IActionResult Contact()
         {
+            ViewData["HeaderImage"] = "/img/defaultBlogBackgroundImage.jpg";
+
             return View();
         }
 
