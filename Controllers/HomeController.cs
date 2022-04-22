@@ -41,7 +41,7 @@ namespace BlogProject.Controllers
         public async Task<IActionResult> Index(int? page)
         {
             int pageNumber = page ?? 1;
-            int pageSize = 5;
+            int pageSize = 3;
 
             var blogs = _context.Blogs
                                 .Include(b => b.BlogUser)

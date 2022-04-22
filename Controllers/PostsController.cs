@@ -43,7 +43,7 @@ namespace BlogProject.Controllers
             ViewData["SearchTerm"] = searchTerm;
 
             var pageNumber = page ?? 1;
-            var pageSize = 5;
+            var pageSize = 3;
 
             var posts = _blogSearchService.Search(searchTerm);
 
