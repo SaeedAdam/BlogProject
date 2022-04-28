@@ -14,6 +14,14 @@
 @model IPagedList<Post>
 
 <div class="row ms-2">
+
+    @if (User.IsInRole(BlogRole.Administrator.ToString()))
+    {
+        <div class="text-start">
+            <a class="btn btn-success btn-sm btn-block border-dark" asp-action="Create" asp-controller="Posts">Create Post</a>
+        </div>
+    }
+
     @foreach (var post in Model)
     {
         //Is the logged in user the Author of this post??

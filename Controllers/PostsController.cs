@@ -164,15 +164,6 @@ namespace BlogProject.Controllers
                     ModelState.AddModelError("Title", "The title you provided cannot be used as it produced a duplicate slug.");
                 }
 
-                //else if (slug.Contains("test"))
-                //{
-                //    validationError = true;
-
-                //    ModelState.AddModelError("", "Are you testing again?");
-
-                //    ModelState.AddModelError("Title", "The title you provided cannot contain the word test");
-                //}
-
                 if (validationError)
                 {
                     ViewData["TagValues"] = string.Join(",", tagValues);
@@ -196,7 +187,7 @@ namespace BlogProject.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Details));
+                return RedirectToAction("Details", "Posts", new { Slug = slug });
             }
 
             ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Description", post.BlogId);
