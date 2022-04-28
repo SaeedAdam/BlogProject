@@ -1,9 +1,10 @@
 ﻿@using BlogProject.Services
 @using BlogProject.Enums
-
+@using Microsoft.AspNetCore.Identity
 @model IEnumerable<BlogProject.Models.Blog>
 
 @inject IImageService imageService
+@inject UserManager<BlogUser> userManager
 
 @{
     ViewData["Title"] = "Index";
@@ -12,7 +13,7 @@
 <h1>Index</h1>
 
 @if (User.IsInRole(nameof(BlogRole.Administrator)))
-{ 
+{
     <p>
         <a asp-action="Create">Create New</a>
     </p>
@@ -58,9 +59,16 @@
                 <td>
                     <img class="img-fluid" width="200px;" src=" @imageService.DecodeImage(blog.ImageData,blog.ContentType)" />
                 <td>
-                    <a asp-action="Edit" asp-route-id="@blog.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@blog.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@blog.Id">Delete</a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-action="Edit" asp-route-id="@blog.Id">Edit</a>
+                        <a asp-action="Details" asp-route-id="@blog.Id">Details</a>
+                        <a asp-action="Delete" asp-route-id="@blog.Id">Delete</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@blog.Id">Details</a>
+                    }
                 </td>
             </tr>
         }

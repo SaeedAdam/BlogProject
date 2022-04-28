@@ -81,6 +81,7 @@ namespace BlogProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Name,Description,Image")] Blog blog)
         {
             if (ModelState.IsValid)
@@ -108,6 +109,7 @@ namespace BlogProject.Controllers
         #region EDIT
         #region GET
         // GET: Blogs/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -186,6 +188,7 @@ namespace BlogProject.Controllers
         #region DELETE
         #region GET
         // GET: Blogs/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

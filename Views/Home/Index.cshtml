@@ -19,7 +19,7 @@
 
 
 <div class="row">
-    @foreach (var blog in Model)
+    @foreach (var blog in Model.OrderByDescending(b => b.Updated).ThenByDescending(b => b.Created))
     {
         <div class="col-sm-12 col-md-6 col-lg-4 mt-2">
             <div class="card border-dark m-5 p-3">
@@ -29,13 +29,6 @@
                         <hr class="card-hr" />
                         <h6 class="card-title light-text">@blog.Name</h6>
                         <hr class="card-hr" />
-                    </div>
-                    <div>
-                        <p class="card-text cftooltip"
-                           data-bs-toggle="tooltip"
-                           data-bs-placement="top"
-                           title=""
-                           data-bs-original-title="@blog.Description">@blog.Description</p>
                     </div>
                     <br />
                     <div class="text-center">
